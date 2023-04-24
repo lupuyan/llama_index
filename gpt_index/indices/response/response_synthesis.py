@@ -122,6 +122,7 @@ class ResponseSynthesizer:
             assert self._response_builder is not None
             response_str = self._response_builder.get_response(
                 query_str=query_bundle.query_str,
+                session_content=query_bundle.session_content,
                 text_chunks=text_chunks,
                 **self._response_kwargs,
             )
@@ -150,6 +151,7 @@ class ResponseSynthesizer:
             assert self._response_builder is not None
             response_str = await self._response_builder.aget_response(
                 query_str=query_bundle.query_str,
+                session_content=query_bundle.session_content,
                 text_chunks=text_chunks,
                 **self._response_kwargs,
             )

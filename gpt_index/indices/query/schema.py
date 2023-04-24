@@ -141,6 +141,7 @@ class QueryBundle(DataClassJsonMixin):
     """
 
     query_str: str
+    session_content: str
     custom_embedding_strs: Optional[List[str]] = None
     embedding: Optional[List[float]] = None
 

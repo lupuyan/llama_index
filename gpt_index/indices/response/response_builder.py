@@ -68,6 +68,7 @@ class BaseResponseBuilder(ABC):
     def get_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
@@ -79,6 +80,7 @@ class BaseResponseBuilder(ABC):
     async def aget_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
@@ -102,15 +104,17 @@ class Refine(BaseResponseBuilder):
     async def aget_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
     ) -> RESPONSE_TEXT_TYPE:
-        return self.get_response(query_str, text_chunks, prev_response)
+        return self.get_response(query_str, session_content, text_chunks, prev_response)
 
     def get_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
@@ -124,6 +128,7 @@ class Refine(BaseResponseBuilder):
                 # is an answer, then return it
                 response = self._give_response_single(
                     query_str,
+                    session_content,
                     text_chunk,
                 )
             else:
@@ -140,6 +145,7 @@ class Refine(BaseResponseBuilder):
     def _give_response_single(
         self,
         query_str: str,
+        session_content: str,
         text_chunk: str,
         **response_kwargs: Any,
     ) -> RESPONSE_TEXT_TYPE:
@@ -151,6 +157,12 @@ class Refine(BaseResponseBuilder):
             )
         )
         text_chunks = qa_text_splitter.split_text(text_chunk)
+        if len(text_chunks) > 0 and session_content is not None:
+            text_template = "{}\n---------------------{}".format(text_chunks[0], session_content)
+            text_chunks[0] = text_template
+        for chunk in text_chunks:
+            print(f"\n上下文内容是：[\n{chunk}\n]\n")
+
         response: Optional[RESPONSE_TEXT_TYPE] = None
         # TODO: consolidate with loop in get_response_default
         for cur_text_chunk in text_chunks:
@@ -251,15 +263,17 @@ class CompactAndRefine(Refine):
     async def aget_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
     ) -> RESPONSE_TEXT_TYPE:
-        return self.get_response(query_str, text_chunks, prev_response)
+        return self.get_response(query_str, session_content, text_chunks, prev_response)
 
     def get_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
@@ -336,6 +350,7 @@ class TreeSummarize(Refine):
     def get_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         num_children: int = 10,
@@ -465,6 +480,7 @@ class SimpleSummarize(BaseResponseBuilder):
     def get_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **kwargs: Any,
@@ -532,6 +548,7 @@ class Generation(BaseResponseBuilder):
     def get_response(
         self,
         query_str: str,
+        session_content: str,
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,

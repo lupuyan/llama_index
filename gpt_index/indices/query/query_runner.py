@@ -295,6 +295,7 @@ class QueryRunner:
     def _prepare_query_objects(
         self,
         query_str_or_bundle: Union[str, QueryBundle],
+        session_content: str,
         index_id: Optional[str] = None,
     ) -> Tuple[BaseQueryCombiner, QueryBundle]:
         """Prepare query combiner and query bundle for query call."""
@@ -313,6 +314,7 @@ class QueryRunner:
         if isinstance(query_str_or_bundle, str):
             query_bundle = QueryBundle(
                 query_str=query_str_or_bundle,
+                session_content=session_content,
                 custom_embedding_strs=[query_str_or_bundle],
             )
         else:
@@ -325,6 +327,7 @@ class QueryRunner:
     def query(
         self,
         query_str_or_bundle: Union[str, QueryBundle],
+        session_content: str,
         index_id: Optional[str] = None,
         level: int = 0,
     ) -> RESPONSE_TYPE:
@@ -344,7 +347,7 @@ class QueryRunner:
             composable graph.
         """
         query_combiner, query_bundle = self._prepare_query_objects(
-            query_str_or_bundle, index_id=index_id
+            query_str_or_bundle, session_content, index_id=index_id
         )
         return query_combiner.run(query_bundle, level)
 

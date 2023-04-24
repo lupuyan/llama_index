@@ -221,6 +221,7 @@ class LLMPredictor(BaseLLMPredictor):
         """
         formatted_prompt = prompt.format(llm=self._llm, **prompt_args)
         llm_prediction = self._predict(prompt, **prompt_args)
+        print(f"打印处理过程中的结果：{llm_prediction}")
         logger.debug(llm_prediction)
 
         # We assume that the value of formatted_prompt is exactly the thing

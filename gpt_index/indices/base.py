@@ -223,13 +223,14 @@ class BaseGPTIndex(Generic[IS], ABC):
     def query(
         self,
         query_str: Union[str, QueryBundle],
+        session_content: str,
         mode: str = QueryMode.DEFAULT,
         query_transform: Optional[BaseQueryTransform] = None,
         use_async: bool = False,
         **query_kwargs: Any,
     ) -> RESPONSE_TYPE:
         """Answer a query.
-
+        新版llama_index
         When `query` is called, we query the index with the given `mode` and
         `query_kwargs`. The `mode` determines the type of query to run, and
         `query_kwargs` are parameters that are specific to the query type.
@@ -257,7 +258,7 @@ class BaseGPTIndex(Generic[IS], ABC):
             recursive=False,
             use_async=use_async,
         )
-        return query_runner.query(query_str)
+        return query_runner.query(query_str, session_content)
 
     async def aquery(
         self,

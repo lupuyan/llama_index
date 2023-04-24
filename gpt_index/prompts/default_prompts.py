@@ -87,29 +87,48 @@ DEFAULT_QUERY_PROMPT_MULTIPLE = TreeSelectMultiplePrompt(
 )
 
 
+# DEFAULT_REFINE_PROMPT_TMPL = (
+#     "The original question is as follows: {query_str}\n"
+#     "We have provided an existing answer: {existing_answer}\n"
+#     "We have the opportunity to refine the existing answer "
+#     "(only if needed) with some more context below.\n"
+#     "------------\n"
+#     "{context_msg}\n"
+#     "------------\n"
+#     "Given the new context, refine the original answer to better "
+#     "answer the question. "
+#     "If the context isn't useful, return the original answer."
+# )
+
 DEFAULT_REFINE_PROMPT_TMPL = (
-    "The original question is as follows: {query_str}\n"
-    "We have provided an existing answer: {existing_answer}\n"
-    "We have the opportunity to refine the existing answer "
-    "(only if needed) with some more context below.\n"
+    "原问题如下:{query_str}\n"
+    "提供了一个现有的答案:{existing_answer}\n"
+    "如果有更合适的答案,可通过下面上下文来改进现有的答案.\n"
     "------------\n"
     "{context_msg}\n"
     "------------\n"
-    "Given the new context, refine the original answer to better "
-    "answer the question. "
-    "If the context isn't useful, return the original answer."
+    "如果上下文没有用处,就返回原始答案.\nAI:"
 )
 DEFAULT_REFINE_PROMPT = RefinePrompt(DEFAULT_REFINE_PROMPT_TMPL)
 
 
+# DEFAULT_TEXT_QA_PROMPT_TMPL = (
+#     "Context information is below. \n"
+#     "---------------------\n"
+#     "{context_str}"
+#     "\n---------------------\n"
+#     "Given the context information and not prior knowledge, "
+#     "answer the question: {query_str}\n"
+# )
+
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
-    "Context information is below. \n"
+    # "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供咨询服务.我会根据下面上下文以简短的方式回答问题:\n"
+    "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供咨询服务.上下文信息如下:\n"
     "---------------------\n"
     "{context_str}"
-    "\n---------------------\n"
-    "Given the context information and not prior knowledge, "
-    "answer the question: {query_str}\n"
+    "根据上下文,回复以下问题: {query_str}\n"
 )
+
 DEFAULT_TEXT_QA_PROMPT = QuestionAnswerPrompt(DEFAULT_TEXT_QA_PROMPT_TMPL)
 
 
