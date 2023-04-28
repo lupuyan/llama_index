@@ -120,7 +120,7 @@ class QuestionAnswerPrompt(Prompt):
     """
 
     prompt_type: PromptType = PromptType.QUESTION_ANSWER
-    input_variables: List[str] = ["context_str", "query_str"]
+    input_variables: List[str] = ["context_str", "query_str", "head_str"]
 
 
 class KeywordExtractPrompt(Prompt):

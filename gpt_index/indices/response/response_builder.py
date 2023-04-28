@@ -150,7 +150,8 @@ class Refine(BaseResponseBuilder):
         **response_kwargs: Any,
     ) -> RESPONSE_TEXT_TYPE:
         """Give response given a query and a corresponding text chunk."""
-        text_qa_template = self.text_qa_template.partial_format(query_str=query_str)
+        head_str = ""
+        text_qa_template = self.text_qa_template.partial_format(query_str=query_str, head_str=head_str)
         qa_text_splitter = (
             self._service_context.prompt_helper.get_text_splitter_given_prompt(
                 text_qa_template, 1
@@ -158,7 +159,7 @@ class Refine(BaseResponseBuilder):
         )
         text_chunks = qa_text_splitter.split_text(text_chunk)
         if len(text_chunks) > 0 and session_content is not None:
-            text_template = "{}\n---------------------{}".format(text_chunks[0], session_content)
+            text_template = "{}\n---------------------\n{}".format(text_chunks[0], session_content)
             text_chunks[0] = text_template
         for chunk in text_chunks:
             print(f"\n上下文内容是：[\n{chunk}\n]\n")

@@ -123,7 +123,7 @@ DEFAULT_REFINE_PROMPT = RefinePrompt(DEFAULT_REFINE_PROMPT_TMPL)
 
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
     # "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供咨询服务.我会根据下面上下文以简短的方式回答问题:\n"
-    "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供咨询服务.上下文信息如下:\n"
+    "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供{head_str}咨询服务.上下文信息如下:\n"
     "---------------------\n"
     "{context_str}"
     "根据上下文,回复以下问题: {query_str}\n"
