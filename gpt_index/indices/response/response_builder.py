@@ -30,7 +30,7 @@ from gpt_index.prompts.prompts import (
     SummaryPrompt,
 )
 from gpt_index.response.utils import get_response_text
-from gpt_index.types import RESPONSE_TEXT_TYPE
+from gpt_index.types import RESPONSE_TEXT_TYPE, RESPONSE_CHUNK_TYPE
 from gpt_index.utils import temp_set_attrs
 
 logger = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class BaseResponseBuilder(ABC):
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
-    ) -> RESPONSE_TEXT_TYPE:
+    ) -> RESPONSE_CHUNK_TYPE:
         """Get response."""
         ...
 
@@ -118,15 +118,16 @@ class Refine(BaseResponseBuilder):
         text_chunks: Sequence[str],
         prev_response: Optional[str] = None,
         **response_kwargs: Any,
-    ) -> RESPONSE_TEXT_TYPE:
+    ) -> RESPONSE_CHUNK_TYPE:
         """Give response over chunks."""
         prev_response_obj = cast(Optional[RESPONSE_TEXT_TYPE], prev_response)
-        response: Optional[RESPONSE_TEXT_TYPE] = None
+        response: Optional[RESPONSE_CHUNK_TYPE] = None
+        res_chunks: Optional[RESPONSE_CHUNK_TYPE] = None
         for text_chunk in text_chunks:
             if prev_response_obj is None:
                 # if this is the first chunk, and text chunk already
                 # is an answer, then return it
-                response = self._give_response_single(
+                response, res_chunks = self._give_response_single(
                     query_str,
                     session_content,
                     text_chunk,
@@ -140,7 +141,7 @@ class Refine(BaseResponseBuilder):
             response = response or "Empty Response"
         else:
             response = cast(Generator, response)
-        return response
+        return response, res_chunks
 
     def _give_response_single(
         self,
@@ -148,7 +149,7 @@ class Refine(BaseResponseBuilder):
         session_content: str,
         text_chunk: str,
         **response_kwargs: Any,
-    ) -> RESPONSE_TEXT_TYPE:
+    ) -> RESPONSE_CHUNK_TYPE:
         """Give response given a query and a corresponding text chunk."""
         head_str = ""
         text_qa_template = self.text_qa_template.partial_format(query_str=query_str, head_str=head_str)
@@ -196,7 +197,7 @@ class Refine(BaseResponseBuilder):
             response = response or "Empty Response"
         else:
             response = cast(Generator, response)
-        return response
+        return response, text_chunks
 
     def _refine_response_single(
         self,

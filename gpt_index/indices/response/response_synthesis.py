@@ -27,7 +27,7 @@ from gpt_index.response.schema import (
     Response,
     StreamingResponse,
 )
-from gpt_index.types import RESPONSE_TEXT_TYPE
+from gpt_index.types import RESPONSE_TEXT_TYPE, RESPONSE_CHUNK_TYPE
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +83,7 @@ class ResponseSynthesizer:
     def _prepare_response_output(
         self,
         response_str: Optional[RESPONSE_TEXT_TYPE],
+        res_chunks: Optional[RESPONSE_CHUNK_TYPE],
         source_nodes: List[NodeWithScore],
     ) -> RESPONSE_TYPE:
         """Prepare response object from response string."""
@@ -93,6 +94,7 @@ class ResponseSynthesizer:
         if response_str is None or isinstance(response_str, str):
             return Response(
                 response_str,
+                res_chunks,
                 source_nodes=source_nodes,
                 extra_info=response_extra_info,
             )
@@ -120,7 +122,7 @@ class ResponseSynthesizer:
 
         if self._response_mode != ResponseMode.NO_TEXT:
             assert self._response_builder is not None
-            response_str = self._response_builder.get_response(
+            response_str, res_chunks = self._response_builder.get_response(
                 query_str=query_bundle.query_str,
                 session_content=query_bundle.session_content,
                 text_chunks=text_chunks,
@@ -128,11 +130,12 @@ class ResponseSynthesizer:
             )
         else:
             response_str = None
+            res_chunks = None
 
         additional_source_nodes = additional_source_nodes or []
         source_nodes = list(nodes) + list(additional_source_nodes)
 
-        return self._prepare_response_output(response_str, source_nodes)
+        return self._prepare_response_output(response_str, res_chunks, source_nodes)
 
     async def asynthesize(
         self,

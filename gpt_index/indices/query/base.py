@@ -33,6 +33,7 @@ from gpt_index.response.schema import (
     RESPONSE_TYPE,
 )
 from gpt_index.token_counter.token_counter import llm_token_counter
+from gpt_index.types import RESPONSE_CHUNK_TYPE
 
 # to prevent us from having to remove all instances of v2 later
 IndexStruct = V2IndexStruct

@@ -4,6 +4,9 @@ import logging
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Generic, List, Optional, Sequence, Type, TypeVar, Union
 
+import redis
+from redis.client import Redis
+
 from gpt_index.constants import DOCSTORE_KEY, INDEX_STRUCT_KEY
 from gpt_index.data_structs.data_structs_v2 import V2IndexStruct
 from gpt_index.data_structs.node_v2 import Node
@@ -412,3 +415,13 @@ class BaseGPTIndex(Generic[IS], ABC):
         index_string = self.save_to_string(**save_kwargs)
         with open(save_path, "wt", encoding=encoding) as f:
             f.write(index_string)
+
+    def save_to_redis(
+        self,
+        key: str,
+        func,
+        **save_kwargs: Any
+    ) -> None:
+        index_string = self.save_to_string(**save_kwargs)
+        # redis存入键值对
+        func(key, index_string)

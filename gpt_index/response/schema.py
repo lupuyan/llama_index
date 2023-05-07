@@ -19,6 +19,7 @@ class Response:
     """
 
     response: Optional[str]
+    res_chunks: List[str]
     source_nodes: List[NodeWithScore] = field(default_factory=list)
     extra_info: Optional[Dict[str, Any]] = None
 

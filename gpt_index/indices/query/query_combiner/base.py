@@ -202,7 +202,7 @@ class MultiStepQueryCombiner(BaseQueryCombiner):
             cur_steps += 1
 
         # synthesize a final response
-        final_response_str = self.response_builder.get_response(
+        final_response_str, res_chunks = self.response_builder.get_response(
             query_str=query_bundle.query_str,
             text_chunks=text_chunks,
             **self._response_kwargs,
@@ -211,6 +211,7 @@ class MultiStepQueryCombiner(BaseQueryCombiner):
             raise ValueError("Currently streaming is not supported for query combiner.")
         return Response(
             response=final_response_str,
+            res_chunks=res_chunks,
             source_nodes=source_nodes,
             extra_info=final_response_extra_info,
         )
