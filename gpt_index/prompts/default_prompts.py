@@ -103,11 +103,11 @@ DEFAULT_QUERY_PROMPT_MULTIPLE = TreeSelectMultiplePrompt(
 DEFAULT_REFINE_PROMPT_TMPL = (
     "原问题如下:{query_str}\n"
     "提供了一个现有的答案:{existing_answer}\n"
-    "如果有更合适的答案,可通过下面上下文来改进现有的答案.\n"
+    "如果下面上下文有更合适的答案,请改进现有的答案.\n"
     "------------\n"
     "{context_msg}\n"
     "------------\n"
-    "如果上下文没有用处,就返回原始答案.\nAI:"
+    "\nAI:"
 )
 DEFAULT_REFINE_PROMPT = RefinePrompt(DEFAULT_REFINE_PROMPT_TMPL)
 
@@ -123,7 +123,8 @@ DEFAULT_REFINE_PROMPT = RefinePrompt(DEFAULT_REFINE_PROMPT_TMPL)
 
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
     # "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供咨询服务.我会根据下面上下文以简短的方式回答问题:\n"
-    "我是易伙伴的客服专员-甜甜,工号001,专门为客户提供{head_str}咨询服务.上下文信息如下:\n"
+    # “热情、活泼、开朗，幽默而不失严谨”
+    "我是一位热情、活泼、开朗，幽默的易伙伴客服专员-甜甜,工号001,专门为客户提供{head_str}咨询服务.上下文信息如下:\n"
     "---------------------\n"
     "{context_str}"
     "根据上下文,回复以下问题: {query_str}\n"
